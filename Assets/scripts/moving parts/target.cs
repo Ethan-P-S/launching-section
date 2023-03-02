@@ -49,7 +49,7 @@ public class target : MonoBehaviour
         {
             if (special != 0)
             {
-                launcher.instance.QueueSpecial(special);
+                launcher.instance.LoadSpecial(special);
             }
             hit = true;
             Sounds.instance.PlayClip(0);

@@ -39,6 +39,11 @@ public class GameManager : MonoBehaviour
         the_launcher.transform.position = new Vector3(the_launcher.transform.position.x, Mathf.Lerp(UI_Lerping.instance.Lerp_Points()[6].position.y, UI_Lerping.instance.Lerp_Points()[7].position.y, theFloat),the_launcher.transform.position.z);
     }
 
+    public Vector3 GetLauncherPosition()
+    {
+        return the_launcher.transform.position;
+    }
+
     void Start()
     {
         titleImages = new Image[titleObjects.Length];

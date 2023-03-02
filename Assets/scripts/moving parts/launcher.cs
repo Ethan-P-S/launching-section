@@ -5,23 +5,22 @@ using UnityEngine.UI;
 
 public class launcher : MonoBehaviour
 {
-    public GameObject DebugObject;
     public static launcher instance;
     Camera c;
     Vector3 mousePos;
     projectile thePro;
-    [SerializeField] GameObject LAUNCH_IMAGE; Image theImage;
+
     float[] equationVariables;
     float[] parabolaTerms;
 
     [SerializeField] Transform mouseAnchor;
-    [SerializeField] GameObject launched;
+    [SerializeField] GameObject LAUNCH_IMAGE, POWERUP_IMAGE, launched; Image theImage, power_up;
+    [SerializeField] Sprite[] powerupSprites;
     [SerializeField] float elapseTime;
     float baseElapse;
     [SerializeField] Sprite readySprite, emptySprite;
 
-    Queue<int> specialLaunches;
-    [SerializeField] SpriteRenderer[] extraReticles;
+    int specialLaunch;
 
     bool canlaunch = true;
     float set_count = -1f;
@@ -35,7 +34,7 @@ public class launcher : MonoBehaviour
         parabolaTerms = new float[5];
         c = Camera.main;
         theImage = LAUNCH_IMAGE.GetComponent<Image>();
-        specialLaunches = new Queue<int>();
+        power_up = POWERUP_IMAGE.GetComponent<Image>();
     }
 
     public bool CanLaunch()
@@ -65,12 +64,6 @@ public class launcher : MonoBehaviour
             mousePos = c.ScreenToWorldPoint(Input.mousePosition);
             mousePos.z = -2;
             mouseAnchor.position = mousePos;
-
-            if (extraReticles[0].enabled)
-            {
-                extraReticles[0].transform.position = mouseAnchor.position + new Vector3(0, 1);
-                extraReticles[1].transform.position = mouseAnchor.position + new Vector3(0, -1);
-            }
 
             if (mousePos.x > transform.position.x)
             {
@@ -117,6 +110,7 @@ public class launcher : MonoBehaviour
             }
 
             GameManager.instance.AdjustLauncherImage(UI_Lerping.instance.LerpTheY(UI_Lerping.instance.Lerp_Points()[8], UI_Lerping.instance.Lerp_Points()[9], transform));
+            POWERUP_IMAGE.transform.position = GameManager.instance.GetLauncherPosition() + new Vector3(0, 75);
 
             if (set_count > 0)
             {
@@ -125,14 +119,6 @@ public class launcher : MonoBehaviour
                 {
                     set_count = -1;
                     canlaunch = set_set;
-                    if (specialLaunches.Count > 0)
-                    {
-                        if (specialLaunches.Peek() == 1)
-                        {
-                            extraReticles[0].enabled = true;
-                            extraReticles[1].enabled = true;
-                        }
-                    }
                 }
             }
 
@@ -141,58 +127,55 @@ public class launcher : MonoBehaviour
 
     void DoTheLaunch()
     {
-         GameManager.instance.CleanThisUP("printing");
-                        scoring.somethingWasHit = false;
+        GameManager.instance.CleanThisUP("printing");
+        scoring.somethingWasHit = false;
 
-                        canlaunch = false;
+        canlaunch = false;
 
-                        if (specialLaunches.Count == 0)
-                        {
-                            LaunchProjectile(mouseAnchor.position, 0);
-                        }
-                        else
-                        {
-                            int theIndex = specialLaunches.Dequeue();
+        if (specialLaunch == 0)
+        {
+            LaunchProjectile(mouseAnchor.position, 0);
+        }
+        else
+        {
+            switch (specialLaunch)
+            {
+                case 1:
+                    {
+                        LaunchProjectile(mouseAnchor.position, 0);
 
-                            switch (theIndex)
-                            {
-                                case 1:
-                                    {
-                                        LaunchProjectile(mouseAnchor.position, 0);
+                        Parabola(transform.position, mouseAnchor.position + new Vector3(0, 1));
+                        LaunchProjectile(mouseAnchor.position + new Vector3(0, 1), 1);
 
-                                        Parabola(transform.position, mouseAnchor.position + new Vector3(0, 1));
-                                        LaunchProjectile(mouseAnchor.position + new Vector3(0, 1), 1);
+                        Parabola(transform.position, mouseAnchor.position + new Vector3(0, -1));
+                        LaunchProjectile(mouseAnchor.position + new Vector3(0, -1), 2);
 
-                                        Parabola(transform.position, mouseAnchor.position + new Vector3(0, -1));
-                                        LaunchProjectile(mouseAnchor.position + new Vector3(0, -1), 2);
+                        Parabola(transform.position, mouseAnchor.position + new Vector3(-0.5f, -0.5f));
+                        LaunchProjectile(mouseAnchor.position + new Vector3(-0.5f, -0.5f), 3);
 
-                                        Parabola(transform.position, mouseAnchor.position + new Vector3(-0.5f, -0.5f));
-                                        LaunchProjectile(mouseAnchor.position + new Vector3(-0.5f, -0.5f), 3);
+                        Parabola(transform.position, mouseAnchor.position + new Vector3(0.5f, -0.5f));
+                        LaunchProjectile(mouseAnchor.position + new Vector3(0.5f, -0.5f), 4);
 
-                                        Parabola(transform.position, mouseAnchor.position + new Vector3(0.5f, -0.5f));
-                                        LaunchProjectile(mouseAnchor.position + new Vector3(0.5f, -0.5f), 4);
+                        Parabola(transform.position, mouseAnchor.position + new Vector3(-0.5f, 0.5f));
+                        LaunchProjectile(mouseAnchor.position + new Vector3(-0.5f, 0.5f), 5);
 
-                                        Parabola(transform.position, mouseAnchor.position + new Vector3(-0.5f, 0.5f));
-                                        LaunchProjectile(mouseAnchor.position + new Vector3(-0.5f, 0.5f), 5);
-
-                                        Parabola(transform.position, mouseAnchor.position + new Vector3(0.5f, 0.5f));
-                                        LaunchProjectile(mouseAnchor.position + new Vector3(0.5f, 0.5f), 6);
-
-                                        extraReticles[0].enabled = false;
-                                        extraReticles[1].enabled = false;
-                                    }
-                                    break;
-                                case 2:
-                                    {
-                                        elapseTime = 3.25f;
-                                        LaunchProjectile(mouseAnchor.position, 0);
-                                        elapseTime = baseElapse;
-                                    }
-                                    break;
-                            }
-                        }
-                        scoring.ShotTaken();
-                        Sounds.instance.PlayClip(1);
+                        Parabola(transform.position, mouseAnchor.position + new Vector3(0.5f, 0.5f));
+                        LaunchProjectile(mouseAnchor.position + new Vector3(0.5f, 0.5f), 6);
+                    }
+                    break;
+                case 2:
+                    {
+                        elapseTime = 2.5f;
+                        LaunchProjectile(mouseAnchor.position, 0);
+                        elapseTime = baseElapse;
+                    }
+                    break;
+            }
+            specialLaunch = 0;
+        }
+        UpdateSpecial();
+        scoring.ShotTaken();
+        Sounds.instance.PlayClip(1);
     }
 
     void LaunchProjectile(Vector3 pos, int index = 0)
@@ -210,13 +193,13 @@ public class launcher : MonoBehaviour
                 rb2d.gravityScale *= -1;
 
             }
-            Vector2 theImpulse = new Vector2((pos.x - transform.position.x) * 1/elapseTime, (pos.y + 0.5f * -(Physics.gravity.y * rb2d.gravityScale) * (elapseTime * elapseTime) - transform.position.y) / elapseTime);
+            Vector2 theImpulse = new Vector2((pos.x - transform.position.x) * 1 / elapseTime, (pos.y + 0.5f * -(Physics.gravity.y * rb2d.gravityScale) * (elapseTime * elapseTime) - transform.position.y) / elapseTime);
             thePro.GetComponent<Rigidbody2D>().AddForce(theImpulse, ForceMode2D.Impulse);
         }
         else
         {
             thePro = Instantiate(launched, transform.position, Quaternion.identity).GetComponent<projectile>();
-            thePro.SetParabola(parabolaTerms, pos, 1/elapseTime);
+            thePro.SetParabola(parabolaTerms, pos, 1 / elapseTime);
             thePro.gameObject.GetComponent<indexer>().INDEX = index;
         }
     }
@@ -233,32 +216,28 @@ public class launcher : MonoBehaviour
         parabolaTerms[2] = ((vertexPoint.x * -1) * (vertexPoint.x * -1) * equationVariables[2]) + vertexPoint.y;
     }
 
-    public void QueueSpecial(int index)
+    void UpdateSpecial()
     {
-        specialLaunches.Enqueue(index);
+        if (specialLaunch == 0)
+        {
+            POWERUP_IMAGE.SetActive(false);
+        }
+        else
+        {
+            POWERUP_IMAGE.SetActive(true);
+            power_up.sprite = powerupSprites[specialLaunch];
+            POWERUP_IMAGE.transform.position = GameManager.instance.GetLauncherPosition() + new Vector3(0, 75); 
+        }
+    }
+
+    public void LoadSpecial(int incoming)
+    {
+        specialLaunch = incoming;
+        UpdateSpecial();
     }
 
     public void ResetSpecial()
     {
-        for (int i = 0; i < 100; i++)
-        {
-            if (specialLaunches.Count > 0)
-            {
-                 _ = specialLaunches.Dequeue();
-            }
-        }
+        specialLaunch = 0;
     }
-
-    public void DebugRect(Rect r)
-    {
-        Instantiate(instance.DebugObject, new Vector3(r.xMin, r.yMin), Quaternion.identity);
-        Instantiate(instance.DebugObject, new Vector3(r.xMin, r.yMax), Quaternion.identity);
-        Instantiate(instance.DebugObject, new Vector3(r.xMax, r.yMin), Quaternion.identity);
-        Instantiate(instance.DebugObject, new Vector3(r.xMax, r.yMax), Quaternion.identity);
-    }
-    public void DebugPoint(Vector2 v)
-    {
-        Instantiate(instance.DebugObject, v, Quaternion.identity);
-    }
-
 }
