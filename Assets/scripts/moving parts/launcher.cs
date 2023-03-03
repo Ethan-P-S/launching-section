@@ -170,6 +170,11 @@ public class launcher : MonoBehaviour
                         elapseTime = baseElapse;
                     }
                     break;
+                case 3:
+                    {
+                        LaunchProjectile(mouseAnchor.position, 0, 3);
+                    }
+                    break;
             }
             specialLaunch = 0;
         }
@@ -178,8 +183,9 @@ public class launcher : MonoBehaviour
         Sounds.instance.PlayClip(1);
     }
 
-    void LaunchProjectile(Vector3 pos, int index = 0)
+    void LaunchProjectile(Vector3 pos, int index = 0, int special = 0)
     {
+        Debug.LogError(special);
         if (launched.GetComponent<projectile>().getPhysics())
         {
             thePro = Instantiate(launched, transform.position, Quaternion.identity).GetComponent<projectile>();
@@ -195,12 +201,14 @@ public class launcher : MonoBehaviour
             }
             Vector2 theImpulse = new Vector2((pos.x - transform.position.x) * 1 / elapseTime, (pos.y + 0.5f * -(Physics.gravity.y * rb2d.gravityScale) * (elapseTime * elapseTime) - transform.position.y) / elapseTime);
             thePro.GetComponent<Rigidbody2D>().AddForce(theImpulse, ForceMode2D.Impulse);
+            thePro.special = special;
         }
         else
         {
             thePro = Instantiate(launched, transform.position, Quaternion.identity).GetComponent<projectile>();
             thePro.SetParabola(parabolaTerms, pos, 1 / elapseTime);
             thePro.gameObject.GetComponent<indexer>().INDEX = index;
+            thePro.special = special;
         }
     }
 

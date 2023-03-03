@@ -20,13 +20,12 @@ public class projectile : MonoBehaviour
 
     [SerializeField] float elapsed_delta = 0;
     float elasped = 0;
-    bool fading = false;
-    bool cleaning = false;
+    bool fading = false, cleaning = false, specialThing = true;
     Rigidbody2D rb2d;
 
-    SpriteRenderer[] allTheSprs;
+    [HideInInspector] public int special = 0;
 
-    public motionPoint debugPOINT;
+    SpriteRenderer[] allTheSprs;
 
     public bool getPhysics()
     {
@@ -48,6 +47,7 @@ public class projectile : MonoBehaviour
         }
         else
         {
+            startPos = transform.position;
             rb2d = GetComponent<Rigidbody2D>();
         }
     }
@@ -70,6 +70,19 @@ public class projectile : MonoBehaviour
         {
             allTheSprs = GetComponentsInChildren<SpriteRenderer>();
             fading = true;
+        }
+
+        if (specialThing)
+        {
+            if (special == 3)
+            {
+                if (((startPos.y - transform.position.y) * rb2d.gravityScale) > 0.1f)
+                {
+                    specialThing = false;
+                    rb2d.velocity = new Vector2(-rb2d.velocity.x, rb2d.velocity.y);
+                    rb2d.gravityScale *= -1;
+                }
+            }
         }
     }
 
@@ -504,6 +517,10 @@ public class projectile : MonoBehaviour
         if (collision.gameObject.CompareTag("wall"))
         {
             Sounds.instance.PlayClip(2);
+            if(special == 3)
+            {
+                specialThing = false;
+            }
         }
     }
 
