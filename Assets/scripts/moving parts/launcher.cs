@@ -185,27 +185,27 @@ public class launcher : MonoBehaviour
 
     void LaunchProjectile(Vector3 pos, int index = 0, int special = 0)
     {
-        Debug.LogError(special);
+        Vector3 VECT = transform.position + new Vector3(-0.5f, 0, 0);
         if (launched.GetComponent<projectile>().getPhysics())
         {
-            thePro = Instantiate(launched, transform.position, Quaternion.identity).GetComponent<projectile>();
+            thePro = Instantiate(launched, VECT, Quaternion.identity).GetComponent<projectile>();
             Rigidbody2D rb2d = thePro.GetComponent<Rigidbody2D>();
-            if (Mathf.Abs(pos.y - transform.position.y) < 1)
+            if (Mathf.Abs(pos.y - VECT.y) < 1)
             {
-                rb2d.gravityScale = Mathf.Abs(pos.y - transform.position.y);
+                rb2d.gravityScale = Mathf.Abs(pos.y - VECT.y);
             }
-            if (pos.y < transform.position.y)
+            if (pos.y < VECT.y)
             {
                 rb2d.gravityScale *= -1;
 
             }
-            Vector2 theImpulse = new Vector2((pos.x - transform.position.x) * 1 / elapseTime, (pos.y + 0.5f * -(Physics.gravity.y * rb2d.gravityScale) * (elapseTime * elapseTime) - transform.position.y) / elapseTime);
+            Vector2 theImpulse = new Vector2((pos.x - VECT.x) * 1 / elapseTime, (pos.y + 0.5f * -(Physics.gravity.y * rb2d.gravityScale) * (elapseTime * elapseTime) - VECT.y) / elapseTime);
             thePro.GetComponent<Rigidbody2D>().AddForce(theImpulse, ForceMode2D.Impulse);
             thePro.special = special;
         }
         else
         {
-            thePro = Instantiate(launched, transform.position, Quaternion.identity).GetComponent<projectile>();
+            thePro = Instantiate(launched, VECT, Quaternion.identity).GetComponent<projectile>();
             thePro.SetParabola(parabolaTerms, pos, 1 / elapseTime);
             thePro.gameObject.GetComponent<indexer>().INDEX = index;
             thePro.special = special;
