@@ -140,7 +140,7 @@ public class launcher : MonoBehaviour
         {
             switch (specialLaunch)
             {
-                case 1:
+                case 1: //lots
                     {
                         LaunchProjectile(mouseAnchor.position, 0);
 
@@ -163,16 +163,26 @@ public class launcher : MonoBehaviour
                         LaunchProjectile(mouseAnchor.position + new Vector3(0.5f, 0.5f), 6);
                     }
                     break;
-                case 2:
+                case 2: //arc
                     {
                         elapseTime = 2.5f;
                         LaunchProjectile(mouseAnchor.position, 0);
                         elapseTime = baseElapse;
                     }
                     break;
-                case 3:
+                case 3: //return
                     {
                         LaunchProjectile(mouseAnchor.position, 0, 3);
+                    }
+                    break;
+                case 4: //combo
+                    {
+                        LaunchProjectile(mouseAnchor.position, 0, 4);
+                    }
+                    break;
+                case 5: //straight
+                    {
+                        LaunchProjectile(mouseAnchor.position, 0, 5);
                     }
                     break;
             }
@@ -198,6 +208,10 @@ public class launcher : MonoBehaviour
             {
                 rb2d.gravityScale *= -1;
 
+            }
+            if(special == 5)
+            {
+                rb2d.gravityScale = 0;
             }
             Vector2 theImpulse = new Vector2((pos.x - VECT.x) * 1 / elapseTime, (pos.y + 0.5f * -(Physics.gravity.y * rb2d.gravityScale) * (elapseTime * elapseTime) - VECT.y) / elapseTime);
             thePro.GetComponent<Rigidbody2D>().AddForce(theImpulse, ForceMode2D.Impulse);

@@ -165,6 +165,7 @@ public class TargetsManager : MonoBehaviour
                 pos = new Vector3(Random.Range(minX, maxX), Random.Range(minY, maxY));
                 theObject.transform.position = pos;
             }
+            theObject.name += " " + i.ToString();
         }
 
         wallObjects = GameObject.FindGameObjectsWithTag("wall");

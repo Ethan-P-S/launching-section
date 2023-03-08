@@ -59,6 +59,8 @@ public class target : MonoBehaviour
             Destroy(GetComponent<Collider2D>());
             scoring.AddShotMultiplier();
             TargetsManager.instance.UpdateCombos();
+            gameObject.tag = "Untagged";
+            Debug.Log(gameObject.name + " was hit");
         }
     }
 

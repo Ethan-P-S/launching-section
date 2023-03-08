@@ -686,7 +686,9 @@ MonoBehaviour:
   - {fileID: 7411223940219298026, guid: 92a3fdb6e6b3b6441955fb1abdf952a6, type: 3}
   - {fileID: 7411223940219298026, guid: e42f992e4c8fa374b83ae4523d2652b8, type: 3}
   - {fileID: 7411223940219298026, guid: 1077f308fda9f3c40b513bee5e64db4b, type: 3}
-  targetWeights: 0c00000002000000010000000200000002000000
+  - {fileID: 7411223940219298026, guid: 54f81c3016645024799023992fa638fe, type: 3}
+  - {fileID: 7411223940219298026, guid: 7d309f45ecf0b8a458111a2942ee5f1d, type: 3}
+  targetWeights: 10000000030000000100000002000000020000000200000014000000
   walls:
   - {fileID: 3777821617112259734, guid: 22207f2252bb948439c46575f4010d26, type: 3}
   - {fileID: 3777821617112259734, guid: 8a117211f21d4f94b8185a3a0e6000bf, type: 3}
@@ -6776,6 +6778,8 @@ MonoBehaviour:
   - {fileID: 21300000, guid: f2c18b70309ba2d4e8ae6576002cbfab, type: 3}
   - {fileID: 21300000, guid: 9d89b222516e1ac40aaeeedb469c1b63, type: 3}
   - {fileID: 21300000, guid: c0ea84e67b96c994aa50ede01af48071, type: 3}
+  - {fileID: 21300000, guid: 06c6325cf7ad1124bae3247bd219b318, type: 3}
+  - {fileID: 21300000, guid: c6e33b664d3f377439167d05807c5bbb, type: 3}
   elapseTime: 0.9
   readySprite: {fileID: 21300000, guid: 6dc752425b9ad0c42a0b72cdbf0583e8, type: 3}
   emptySprite: {fileID: 21300000, guid: 14dfdee677207a542914c96619e4cab6, type: 3}

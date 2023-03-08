@@ -144,9 +144,12 @@ public class projectile : MonoBehaviour
             }
             else
             {
-                transform.rotation = Quaternion.identity;
-                angle = Mathf.Rad2Deg * Mathf.Asin(rb2d.velocity.y / Mathf.Sqrt((rb2d.velocity.x * rb2d.velocity.x) + (rb2d.velocity.y * rb2d.velocity.y)));
-                transform.Rotate(0, 0, angle);
+                if (special != -555)
+                {
+                    transform.rotation = Quaternion.identity;
+                    angle = Mathf.Rad2Deg * Mathf.Asin(rb2d.velocity.y / Mathf.Sqrt((rb2d.velocity.x * rb2d.velocity.x) + (rb2d.velocity.y * rb2d.velocity.y)));
+                    transform.Rotate(0, 0, angle);
+                }
             }
 
 
@@ -508,7 +511,40 @@ public class projectile : MonoBehaviour
             {
                 collision.gameObject.GetComponent<target>().Hit(transform);
                 HitSomething();
+                if(special == 4)
+                {
+                    TARGET_ACQUIRED();
+                }
             }
+        }
+    }
+
+    void TARGET_ACQUIRED()
+    {
+        GameObject[] targetObjects = GameObject.FindGameObjectsWithTag("target");
+
+        if (targetObjects.Length > 0)
+        {
+            rb2d.gravityScale = 0;
+            rb2d.velocity = Vector2.zero;
+
+            float DIST = 10000;
+            Transform target_acquired = targetObjects[0].transform;
+
+            foreach (GameObject obj in targetObjects)
+            {
+                if (Vector2.Distance(transform.position, obj.transform.position) < DIST)
+                {
+                    DIST = Vector2.Distance(transform.position, obj.transform.position);
+                    target_acquired = obj.transform;
+                }
+            }
+            rb2d.velocity = (transform.position - target_acquired.position) * -1;
+
+            transform.rotation = Quaternion.identity;
+            angle = Mathf.Rad2Deg * Mathf.Asin(rb2d.velocity.y / Mathf.Sqrt((rb2d.velocity.x * rb2d.velocity.x) + (rb2d.velocity.y * rb2d.velocity.y)));
+            transform.Rotate(0, 0, angle);
+            special = -555;
         }
     }
 
