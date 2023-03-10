@@ -140,6 +140,11 @@ public class launcher : MonoBehaviour
         {
             switch (specialLaunch)
             {
+                default:
+                    {
+                        LaunchProjectile(mouseAnchor.position, 0);
+                    }
+                    break;
                 case 1: //lots
                     {
                         LaunchProjectile(mouseAnchor.position, 0);
@@ -185,12 +190,35 @@ public class launcher : MonoBehaviour
                         LaunchProjectile(mouseAnchor.position, 0, 5);
                     }
                     break;
+                case 6: //other side
+                    {
+                        LaunchBackwards(mouseAnchor.position);
+                    }
+                    break;
             }
             specialLaunch = 0;
         }
         UpdateSpecial();
         scoring.ShotTaken();
         Sounds.instance.PlayClip(1);
+    }
+
+    void LaunchBackwards(Vector3 pos)
+    {
+        Vector3 VECT = transform.position + new Vector3((-transform.position.x * 2) + 0.5f, 0, 0);
+        thePro = Instantiate(launched, VECT, Quaternion.identity).GetComponent<projectile>();
+        Rigidbody2D rb2d = thePro.GetComponent<Rigidbody2D>();
+        if (Mathf.Abs(pos.y - VECT.y) < 1)
+        {
+            rb2d.gravityScale = Mathf.Abs(pos.y - VECT.y);
+        }
+        if (pos.y < VECT.y)
+        {
+            rb2d.gravityScale *= -1;
+
+        }
+        Vector2 theImpulse = new Vector2((pos.x - VECT.x) * 1 / elapseTime, (pos.y + 0.5f * -(Physics.gravity.y * rb2d.gravityScale) * (elapseTime * elapseTime) - VECT.y) / elapseTime);
+        thePro.GetComponent<Rigidbody2D>().AddForce(theImpulse, ForceMode2D.Impulse);
     }
 
     void LaunchProjectile(Vector3 pos, int index = 0, int special = 0)

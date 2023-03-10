@@ -60,7 +60,6 @@ public class target : MonoBehaviour
             scoring.AddShotMultiplier();
             TargetsManager.instance.UpdateCombos();
             gameObject.tag = "Untagged";
-            Debug.Log(gameObject.name + " was hit");
         }
     }
 

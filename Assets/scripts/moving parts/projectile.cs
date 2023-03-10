@@ -147,8 +147,19 @@ public class projectile : MonoBehaviour
                 if (special != -555)
                 {
                     transform.rotation = Quaternion.identity;
-                    angle = Mathf.Rad2Deg * Mathf.Asin(rb2d.velocity.y / Mathf.Sqrt((rb2d.velocity.x * rb2d.velocity.x) + (rb2d.velocity.y * rb2d.velocity.y)));
-                    transform.Rotate(0, 0, angle);
+
+                    float XVAL = rb2d.velocity.x * rb2d.velocity.x;
+                    float YVAL = rb2d.velocity.y * rb2d.velocity.y;
+                    angle = Mathf.Rad2Deg * Mathf.Asin(rb2d.velocity.y / (Mathf.Sqrt(XVAL + YVAL)));
+                    if (rb2d.velocity.x < 0)
+                    {
+                        transform.Rotate(0, 0, -angle);
+                        transform.Rotate(0, 0, 180);
+                    }
+                    else
+                    {
+                        transform.Rotate(0, 0, angle);
+                    }
                 }
             }
 
@@ -539,7 +550,7 @@ public class projectile : MonoBehaviour
                     target_acquired = obj.transform;
                 }
             }
-            rb2d.velocity = (transform.position - target_acquired.position) * -1;
+            rb2d.velocity = (transform.position - target_acquired.position) * -2;
 
             transform.rotation = Quaternion.identity;
             angle = Mathf.Rad2Deg * Mathf.Asin(rb2d.velocity.y / Mathf.Sqrt((rb2d.velocity.x * rb2d.velocity.x) + (rb2d.velocity.y * rb2d.velocity.y)));
