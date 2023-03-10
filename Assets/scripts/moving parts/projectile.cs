@@ -79,8 +79,21 @@ public class projectile : MonoBehaviour
                 if (((startPos.y - transform.position.y) * rb2d.gravityScale) > 0.1f)
                 {
                     specialThing = false;
+                    rb2d.velocity = new Vector2(-rb2d.velocity.x, 0);
+                    rb2d.gravityScale = 0;
+                }
+            }
+            if (special == 7)
+            {
+                if (Mathf.Abs(transform.position.y) > 5.4f)
+                {
+                    specialThing = false;
+                    rb2d.velocity = new Vector2(rb2d.velocity.x, -rb2d.velocity.y);
+                }
+                else if (!GetComponent<SpriteRenderer>().isVisible)
+                {
+                    specialThing = false;
                     rb2d.velocity = new Vector2(-rb2d.velocity.x, rb2d.velocity.y);
-                    rb2d.gravityScale *= -1;
                 }
             }
         }
@@ -162,8 +175,6 @@ public class projectile : MonoBehaviour
                     }
                 }
             }
-
-
             if ((transform.position.y > 12 && rb2d.gravityScale < 0) || (transform.position.y < -12 && rb2d.gravityScale > 0) || transform.position.x > 11 || transform.position.x < -10)
             {
                 cleaning = true;

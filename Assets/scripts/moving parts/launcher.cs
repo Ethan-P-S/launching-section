@@ -195,6 +195,11 @@ public class launcher : MonoBehaviour
                         LaunchBackwards(mouseAnchor.position);
                     }
                     break;
+                case 7: //bouncy edge
+                    {
+                        LaunchProjectile(mouseAnchor.position, 0, 7);
+                    }
+                    break;
             }
             specialLaunch = 0;
         }
